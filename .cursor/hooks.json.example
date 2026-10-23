@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": ".cursor/hooks/auto-format.sh"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": ".cursor/hooks/block-dangerous.sh"
+      }
+    ],
+    "beforeReadFile": [
+      {
+        "command": ".cursor/hooks/block-secrets.sh"
+      }
+    ],
+    "stop": [
+      {
+        "command": ".cursor/hooks/notify-done.sh"
+      }
+    ]
+  }
+}

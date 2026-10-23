@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.execnt.wms.mapper.{{Domain}}Mapper">
+
+    <select id="selectList" parameterType="map" resultType="map">
+        <!-- TODO: 구현 -->
+        SELECT * FROM wms.twms_{{table_name}}
+        <where>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+</mapper>

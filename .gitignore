@@ -1,0 +1,40 @@
+# Gradle / 빌드
+backend/.gradle/
+backend/build/
+backend/out/
+*.class
+
+# 로컬 백엔드 실행 로그 (scripts/start-backend.sh)
+logs/
+
+# Cursor 훅 감사 로그 (afterFileEdit 샘플)
+.cursor/hook-audit.log
+
+# IDE / OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# 로컬 설정·비밀 (커밋 금지)
+.env
+backend/.env
+*.local.yml
+
+# 프론트 (향후 도입 시)
+node_modules/
+dist/
+.cursor/logs/agent-history.log
+
+# Local connection settings; only examples belong in this repository.
+.cursor/mcp.json
+.cursor/hooks.json
+.env.*
+!.env.example
+**/application-local.yml
+backend/src/main/resources/application.yml
+database/reports/*
+!database/reports/.gitkeep
+# Instructor answers must stay outside the public repository.
+instructor/
+answers/

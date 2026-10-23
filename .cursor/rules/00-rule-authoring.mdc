@@ -1,0 +1,310 @@
+---
+description: "Cursor Rule 작성 기준 – 목표 한 문장, globs 범위, 500줄 상한, Rule·Reasoning·예시 구조, MUST·SHOULD 어휘. Rule을 새로 쓰거나 고칠 때 적용 (출처: mySUNI 2026-01)"
+alwaysApply: false
+---
+
+# Rule Authoring Guidelines
+
+Create concise, actionable rules that enhance reusability and maintain consistency across teams and projects.
+
+## Goals and Scope
+
+### Define Clear Objectives
+
+- **State the rule's goal in one clear sentence.**
+- **Limit scope** using file patterns (globs) or task types.
+- **Verify no duplication or conflicts** with existing rules.
+
+### Scope Definition
+
+Rules should specify:
+- **File patterns**: Use globs like `**/*.tsx`, `apps/**/components/**`
+- **Task types**: e.g., "when creating React components", "when writing API hooks"
+- **Context**: Specific directories, frameworks, or domains
+
+## Length and Structure
+
+### Keep Rules Concise
+
+- **Maintain under 500 lines**; split into multiple rules if larger.
+- **Follow reading flow**: Title → Background/Intent → Specific Guidelines → Examples/References
+- **Use imperative voice** and minimize unnecessary explanations.
+
+### Structure Template
+
+```markdown
+## [Section Title]
+
+**Rule:** [One clear, actionable statement]
+
+**Reasoning:**
+- [Why this rule exists]
+- [What problem it solves]
+
+#### Recommended Pattern:
+
+[Code example showing the correct approach]
+
+#### Anti-Pattern:
+
+[Code example showing what to avoid]
+```
+
+## Clarity and Actionability
+
+### Use Verifiable Criteria
+
+- **Avoid ambiguous expressions** like "when possible", "appropriately", "as needed"
+- **Use decisive language**: "MUST", "SHOULD", "MUST NOT", "SHOULD NOT"
+- **Include code examples** showing how to apply the rule immediately
+
+### Actionable Language Examples
+
+**Bad:**
+- "Try to use TypeScript when possible"
+- "Consider validating inputs appropriately"
+- "It's good to add error handling"
+
+**Good:**
+- "All new files MUST use TypeScript"
+- "All external inputs MUST be validated using a schema (Zod/Yup)"
+- "All async functions MUST include error handling"
+
+## Application Method Selection
+
+Choose the appropriate application type based on the rule's purpose:
+
+### Always Apply (`alwaysApply: true`)
+
+**Use when:** The rule contains universal guidelines needed in every chat session.
+
+**Example:** Core coding standards, architectural principles, team-wide conventions.
+
+### Apply Intelligently (`alwaysApply: false` with description)
+
+**Use when:** The rule is relevant to specific contexts but not always needed.
+
+**Best practice:** Write a clear `description` that helps the AI determine relevance.
+
+```yaml
+---
+description: "React component patterns and prop validation standards"
+alwaysApply: false
+---
+```
+
+### Apply to Specific Files (`globs`)
+
+**Use when:** The rule only applies to certain file types or directories.
+
+**Example:**
+```yaml
+---
+description: "Component styling conventions"
+alwaysApply: false
+globs: ["**/*.tsx", "**/components/**"]
+---
+```
+
+### Apply Manually (`@mention`)
+
+**Use when:** The rule is specialized, high-cost, or requires explicit invocation.
+
+**Example:** Complex refactoring workflows, migration guides, one-time procedures.
+
+## Reusability and References
+
+### Promote Reusable Patterns
+
+- **Elevate repeated prompts** to rules for reuse
+- **Modularize large rules** into templates/workflows/standards and cross-reference
+- **Reference external docs/scripts** using relative paths for unified version control
+
+### Reference Format
+
+```markdown
+See @examples/frontend/component-template.tsx for a complete example.
+
+Reference @scripts/validation/schema.ts for validation patterns.
+```
+
+## Examples and Templates
+
+### Include Practical Examples
+
+- **Every rule MUST include at least one real-world example**
+- **Link to reference files** explicitly using `@filename` syntax
+- **Show both correct and incorrect patterns** when helpful
+
+### Example Structure
+
+```markdown
+#### Recommended Pattern:
+
+```typescript
+// Clear, correct implementation
+export function Component() {
+  // ... implementation
+}
+```
+
+#### Anti-Pattern:
+
+```typescript
+// What to avoid
+export function Component() {
+  // ... problematic implementation
+}
+```
+```
+
+## Team Rules and Priority
+
+### Priority Order
+
+When rules conflict, priority is: **Team → Project → User**
+
+- **Team rules**: Organization-wide standards (highest priority)
+- **Project rules**: Repository-specific conventions
+- **User rules**: Personal preferences (lowest priority)
+
+### Compliance and Enforcement
+
+- **Use Enforce sparingly** - only when compliance is mandatory
+- **Security controls** should be separate from coding style rules
+- **Prefer guidance over enforcement** for most development practices
+
+## Validation Checklist
+
+Before finalizing a rule, verify:
+
+- [ ] **Goal is clearly defined** in one sentence
+- [ ] **Scope is specific** (globs/task types are narrowed)
+- [ ] **Guidelines are verifiable** and avoid ambiguous expressions
+- [ ] **Examples/references are included**
+- [ ] **No duplication or conflicts** with other rules
+- [ ] **Application method** (Always/Intelligent/Specific/Manual) is appropriate
+- [ ] **Under 500 lines** or properly split into multiple rules
+
+## Quick Reference Template
+
+```markdown
+---
+description: "[One-sentence description of what this rule covers]"
+alwaysApply: [true|false]
+[globs: ["pattern1", "pattern2"]] # Optional
+---
+
+# [Rule Title]
+
+[Brief background explaining why this rule exists]
+
+## [Section 1]
+
+**Rule:** [Clear, actionable statement]
+
+**Reasoning:**
+- [Why this matters]
+- [What problem it solves]
+
+#### Recommended Pattern:
+
+[Code example]
+
+#### Anti-Pattern:
+
+[What to avoid]
+
+## [Section 2]
+
+[Repeat structure...]
+
+## References
+
+- @examples/[relevant-file].tsx
+- @scripts/[relevant-script].ts
+```
+
+## Example Rule
+
+```markdown
+---
+description: "Frontend component standards and API input validation guidelines"
+alwaysApply: false
+globs: ["**/*.tsx", "**/components/**"]
+---
+
+# Frontend Component Standards
+
+### Components
+
+**Rule:** All new files MUST use TypeScript.
+
+**Rule:** React components MUST use functional components as the default.
+
+**Rule:** Props MUST have explicit types declared, and optional props MUST provide default values.
+
+#### Recommended Pattern:
+
+```tsx
+interface ButtonProps {
+  label: string;
+  onClick: () => void;
+  disabled?: boolean;
+}
+
+export function Button({ label, onClick, disabled = false }: ButtonProps) {
+  return (
+    <button onClick={onClick} disabled={disabled}>
+      {label}
+    </button>
+  );
+}
+```
+
+### Input Validation
+
+**Rule:** All external inputs MUST be validated using a schema (Zod/Yup).
+
+**Rule:** Duplicate validation at network/storage boundaries is allowed.
+
+#### Recommended Pattern:
+
+```typescript
+import { z } from "zod";
+
+const UserSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  age: z.number().int().min(18),
+});
+
+type User = z.infer<typeof UserSchema>;
+
+async function createUser(input: unknown): Promise<User> {
+  return UserSchema.parse(input);
+}
+```
+
+## References
+
+- @examples/frontend/component-template.tsx
+- @examples/validation/schema.ts
+```
+
+## Metadata Hints
+
+### File Organization
+
+- **Project rules**: Place in `.cursor/rules/`
+- **File naming**: Use kebab-case: `rule-authoring-guidelines.mdc`
+- **Examples/scripts**: Separate into `examples/` or `scripts/` directories
+- **Use globs** when scope is clearly defined for specific directories
+
+### Best Practices
+
+1. **Start with description** - Helps AI determine relevance
+2. **Use alwaysApply sparingly** - Only for truly universal rules
+3. **Include examples** - Makes rules immediately actionable
+4. **Cross-reference** - Link to related rules and examples
+5. **Keep focused** - One rule per concern or domain
