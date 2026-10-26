@@ -68,24 +68,24 @@ application.yml이 없으면 docs/99.references/backend-config.md를 참고해�
 
 ### 4.2 DB 설계 — `@db-architect`
 
-analyst가 만든 Task를 기반으로 DB를 설계한다.
+DB 설계는 필수 실습이다. 사전 제공된 것은 개인 DB와 빈 `wms` 스키마이며, 업무 테이블·DDL은 직접 설계한다. `database/README.md`의 모델링 실습을 따라 개념 모델 → DDL → 표준 점검 → 업무 규칙 리뷰 → 기준 모델 확정을 수행한다. 그 실습에서 이미 확정한 DDL이 있으면 이 단계에서는 결과를 확인·인계하고 다시 만들지 않는다.
 
-```
-실제 실습에서는 만들어진 DB를 사용할 예정으로 수행금지
-```
-
-~~@db-architect
+```text
+@db-architect
 docs/01.analysis/03.tasks/ 에서 DB 관련 Task를 읽고
-전체 기능(입고, 출고, 대시보드, 상태 전이)에 필요한 DDL과 초기 데이터를 작성해 줘.
-데이터 사전(data-dictionary.md)도 함께 만들어 줘.~~
+전체 기능(입고, 출고, 대시보드, 상태 전이)의 개념 모델과 확인 질문부터 작성해 줘.
+개념 모델 검토 후 database/schemas/wms_ddl.sql, 시드, 데이터 사전을 작성할 거야.
+이미 확정한 기준 DDL이 있으면 재생성하지 말고 Task와의 정합성을 확인해 줘.
 
-~~산출물 네이밍과 경로는 docs/99.references/document-standards.md를 따라.
-DB 네이밍 규칙은 docs/99.references/coding-standards.md를 따라.~~
+database/README.md와 .cursor/rules/06-database.mdc를 따라.
+PostgreSQL 17, 학생별 개인 DB의 wms 스키마를 사용해.
+DB·계정 생성이나 권한 변경 SQL은 작성하지 말고, DB 적용·초기화는 내 확인 없이 실행하지 마.
+```
 
 확인 포인트:
 
-- DDL 파일 네이밍이 document-standards.md 규칙({순번}_{설명}.sql)을 따르는가
-- 테이블 접두사 `twms`_가 적용되었는가
+- 기준 DDL이 `database/schemas/wms_ddl.sql`에 있는가
+- PostgreSQL 17과 본인 학생 계정·DB를 사용하고, `wms` 스키마 안의 테이블명에 접두어를 붙이지 않았는가
 - 공통 컬럼(created_at, updated_at, created_by, updated_by)이 포함되어 있는가
 - status_transition_rule 테이블에 입고·출고 상태 전이 규칙이 모두 INSERT 되어 있는가
 - 입고 관련 테이블(inbound_order, inbound_order_line 등)이 생성되었는가

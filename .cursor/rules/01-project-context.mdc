@@ -23,7 +23,7 @@ alwaysApply: true
 | 데이터 사전 | docs/99.references/data-dictionary.md | 테이블·컬럼 의미, 공통코드 (db-architect가 생성) |
 
 ## 기술 스택
-- 백엔드: Spring Boot 3.x, Java 21, MyBatis, PostgreSQL
+- 백엔드: Spring Boot 3.x, Java 21, MyBatis, PostgreSQL 17
 - 프론트: Vue 3 (CDN), Vue Router (CDN), Element Plus, Tailwind CSS, Axios
 - 빌드: Gradle
 

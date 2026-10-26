@@ -6,10 +6,10 @@
 
     <select id="selectList" parameterType="map" resultType="map">
         <!-- TODO: 구현 -->
-        SELECT * FROM wms.twms_{{table_name}}
+        SELECT * FROM wms.{{table_name}}
         <where>
-            <if test="status != null and status != ''">
-                AND status = #{status}
+            <if test="status_code != null and status_code != ''">
+                AND status_code = #{status_code}
             </if>
         </where>
     </select>

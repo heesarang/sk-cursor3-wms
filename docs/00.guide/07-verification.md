@@ -94,7 +94,7 @@
 이 프로젝트의 기술 스택과 패키지 구조를 설명해 줘
 ```
 
-응답에 Java 21, Spring Boot 3.x, MyBatis, PostgreSQL 16, `com.execnt.wms` 패키지, 접두어 없는 `wms` 스키마 등 `01-project-context.mdc`의 내용이 반영되어 있으면 Always Apply 룰이 정상 주입되고 있는 것이다.
+응답에 Java 21, Spring Boot 3.x, MyBatis, PostgreSQL 17, `com.execnt.wms` 패키지, 접두어 없는 `wms` 스키마 등 `01-project-context.mdc`의 내용이 반영되어 있으면 Always Apply 룰이 정상 주입되고 있는 것이다.
 
 ### 4.2 Commands 호출 확인
 

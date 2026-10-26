@@ -13,7 +13,7 @@ PRD로부터 전체 개발 프로세스를 총괄한다. 다른 에이전트에�
 
 ## 실행 순서
 
-> DB DDL이 `database/schemas/`에 이미 있으면 db-architect 단계는 생략한다.
+> DB 모델링 실습에서 검토·확정한 `database/schemas/wms_ddl.sql`과 데이터 사전이 있으면 이를 재사용한다. 파일 존재만으로 확정 여부를 판단하지 않는다. 미확정이면 분석 후 db-architect에 개념 모델·DDL 작성을 위임하고 사용자 리뷰·확정 후 UI·개발 단계로 진행한다. 개인 DB가 제공됐다는 이유로 테이블 설계를 생략하지 않는다.
 
 1. **분석/설계** — /analyst에게 PRD 분석 및 Task 분해 위임 (application.yml 생성 포함)
 2. **UI 설계** — /ui-designer에게 화면 설계 위임

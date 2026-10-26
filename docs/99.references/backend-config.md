@@ -5,7 +5,7 @@
 `backend/src/main/resources/application.yml.example`을 같은 폴더의 `application.yml`로 복사합니다. 실제 접속 정보는 다음 환경변수로 전달합니다.
 
 - SPRING_DATASOURCE_URL: 강사가 안내한 JDBC URL
-- SPRING_DATASOURCE_USERNAME: 강사가 안내한 애플리케이션 계정
+- SPRING_DATASOURCE_USERNAME: 본인 학생 계정 (예: student01, 개인 DB wms01)
 - SPRING_DATASOURCE_PASSWORD: 해당 계정 비밀번호
 
 루트 `.env.example`은 변수 목록입니다. Spring Boot와 기존 실행 스크립트는 .env를 자동으로 읽지 않습니다. 셸 또는 IDE 실행 환경에 직접 설정하세요. 실계정 설정 파일과 비밀번호를 커밋하지 않습니다.
@@ -20,4 +20,6 @@ Java 21, Spring Boot 3.5.4, MyBatis를 사용하며 기본 패키지는 `com.exe
 
 ## DB 적용
 
-DDL 실행은 애플리케이션 시작과 분리합니다. 검토한 DDL을 실습 DB에 적용하고 테이블과 제약조건을 확인한 뒤 애플리케이션을 실행합니다.
+PostgreSQL 17을 사용합니다. DDL·조회·앱 연결은 같은 본인 학생 계정으로 수행하며 DB·계정 생성은 강사가 관리합니다. 접속 개방 공지 후 최종 서버 주소와 TLS 설정을 적용합니다. 계정당 동시 연결 한도는 4개이며 앱 풀은 최대 3개를 기준으로 DB 도구의 추가 연결에 맞춰 줄입니다.
+
+DDL 실행은 애플리케이션 시작과 분리합니다. 검토한 DDL을 본인 실습 DB에 적용하고 테이블과 제약조건을 확인한 뒤 애플리케이션을 실행합니다.

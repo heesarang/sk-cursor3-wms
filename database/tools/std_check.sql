@@ -1,7 +1,7 @@
 -- =====================================================================
 -- std_check.sql : DB 표준 자동 점검 (결정적 검사)
---   사용: psql -d wmsdb -f std_check.sql                 (기본 스키마 wms)
---         psql -d wmsdb -v schema=다른스키마 -f std_check.sql
+--   사용: PGHOST/PGPORT/PGDATABASE/PGUSER 및 안내된 TLS 설정 후 (본인 학생 계정·DB)
+--         psql -W -v ON_ERROR_STOP=1 -v schema=wms -f database/tools/std_check.sql
 --   결과가 0건이면 표준 통과. 위반 내용은 Cursor에게 설명·수정을 요청한다.
 --   R01 테이블 COMMENT   R02 컬럼 COMMENT      R03 PK 존재          R04 PK명 {테이블}_id
 --   R05 IDENTITY(SERIAL 금지)  R06 공통컬럼       R07 금지 타입         R08 길이/정밀도

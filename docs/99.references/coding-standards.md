@@ -74,7 +74,7 @@ namespace: Mapper 인터페이스의 FQCN (예: `{base-package}.mapper.{Domain}M
 | 상태 변경 | POST   | `/api/{domain}/{resource}/{key}/transition` | `/api/order/items/001/transition` |
 
 
-구체적인 API 경로와 파라미터는 요구사항 정의서(REQ §5)에서 확정한다.
+구체적인 API 경로와 파라미터는 요구사항 정의서(REQ §5)에서 확정한다. 조회 파라미터와 응답 필드 이름은 DB 컬럼명과 같은 snake_case를 쓴다(예: `center_no`, `status_code`). `_cd` 같은 약어를 쓰지 않는다.
 
 ### 4.2 응답 형식
 

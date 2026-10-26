@@ -19,7 +19,7 @@
 
 | 경로                                  | 용도                                        |
 | ----------------------------------- | ----------------------------------------- |
-| `docs/01.analysis/01.rfp/`          | PRD 원문 (`wms_prd.md`) — 모든 분석·설계의 입력 기준   |
+| `docs/01.analysis/01.rfp/`          | PRD 원문 (`wms_prd.md`) — 모든 분석·설계의 입력 기준. 추가 PRD `wms_prd-inventory-flow.md`(F5~F7 입고 등록·재고·재고 연동 출고)는 F1~F3 완료 후 선택 과제 |
 | `docs/01.analysis/02.requirements/` | 요구사항 정의서                                  |
 | `docs/01.analysis/03.tasks/`        | Task 정의서 (`*.task.md`)                    |
 | `docs/01.analysis/04.ui/`           | UI 설계 HTML·Mock JSON                      |

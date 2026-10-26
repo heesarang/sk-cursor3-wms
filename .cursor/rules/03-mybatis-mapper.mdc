@@ -22,7 +22,7 @@ alwaysApply: false
 
 ## 동적 SQL
 - 조건 검색에 <if>, <where>, <choose> 활용
-- 문자열 비교: <if test="status != null and status != ''">
+- 문자열 비교: <if test="status_code != null and status_code != ''">  (파라미터명은 DB 컬럼명과 동일한 snake_case)
 
 ## 네이밍
 - select 쿼리 id: select + 의미 (예: selectInboundOrderList)

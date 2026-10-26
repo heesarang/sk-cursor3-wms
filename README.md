@@ -9,7 +9,7 @@ Cursor를 활용해 창고관리 시스템(WMS)을 구현하는 실습입니다.
 - 백엔드: Java 21, Spring Boot 3.5.4, MyBatis, Gradle Wrapper
 - 패키지·Gradle group: `com.execnt.wms`
 - 프론트엔드: Vue 3 CDN
-- DB: PostgreSQL, 업무 스키마 `wms`
+- DB: PostgreSQL 17, 학생별 개인 DB·계정 (예: `student01` → `wms01`), 업무 스키마 `wms`
 - 기능 출발점: 입고·출고·대시보드·상태 전이(F1~F4)
 
 ## 시작하기

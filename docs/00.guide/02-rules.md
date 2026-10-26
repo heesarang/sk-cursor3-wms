@@ -55,7 +55,7 @@ alwaysApply: true
 
 ```
 
-모든 대화에 항상 주입되는 프로젝트 헌법이다. 기술 스택(Java 21, Spring Boot 3.x, MyBatis, PostgreSQL 16, Vue 3 CDN, Element Plus, Tailwind CSS 3), 패키지 구조(`com.execnt.wms`), DB 스키마 규약(`wms` 스키마, 접두어 없음), 레이어 호출 방향(Controller → Service → Mapper), API 응답 형식(`ApiResponse<T>`) 등 프로젝트 전역 규칙을 담고 있다.
+모든 대화에 항상 주입되는 프로젝트 헌법이다. 기술 스택(Java 21, Spring Boot 3.x, MyBatis, PostgreSQL 17, Vue 3 CDN, Element Plus, Tailwind CSS 3), 패키지 구조(`com.execnt.wms`), DB 스키마 규약(`wms` 스키마, 접두어 없음), 레이어 호출 방향(Controller → Service → Mapper), API 응답 형식(`ApiResponse<T>`) 등 프로젝트 전역 규칙을 담고 있다.
 
 ### 4.2 `02-java-backend.mdc` — Auto‑attach
 
