@@ -59,7 +59,7 @@ rm -rf docs/test-reports/*
 
 삭제 후 다음을 확인한다.
 
-- `.cursor/` 하위 파일이 온전한가 (Rules 6개, Commands 5개, Skills 2개, Agents 8개, Hooks 4개)
+- `.cursor/` 하위 파일이 온전한가 (Rules 7개, Commands 6개, Skills 2개, Agents 8개, Hooks 4개)
 - PRD 파일이 존재하는가 (`docs/01.analysis/01.rfp/wms_prd.md`)
 - 참조 문서 3개가 존재하는가 (`docs/99.references/` 하위 document-standards.md, coding-standards.md, backend-config.md)
 - 빌드 설정이 유효한가 (`./gradlew tasks` 실행 가능)

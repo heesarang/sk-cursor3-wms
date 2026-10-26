@@ -38,7 +38,7 @@ Cursor에서 에이전트의 동작을 제어하는 설정은 모두 프로젝�
 | 1   | `01-repository-layout.md` | 저장소 폴더 구조와 문서 경로 규약 확인                         |
 | 2   | `02-rules.md`             | Rules 개념 이해 + 프로젝트용 `.mdc` 파일 구축               |
 | 3   | `03-commands.md`          | Commands 개념 이해 + 슬래시 커맨드 7개 구축                 |
-| 4   | `04-skills.md`            | Skills 개념 이해 + [SKILL.md](http://skill.md/) 구축 |
+| 4   | `04-skills.md`            | Skills 개념 이해 + SKILL.md 구축 |
 | 5   | `05-agents.md`            | Agents 개념 이해 + 서브에이전트 정의 구축                    |
 | 6   | `06-hooks.md`             | Hooks 개념 이해 + 설정 + 실제 동작 확인                    |
 | 7   | `07-verification.md`      | 전체 형식 점검 + 라우팅 표 + 스모크 테스트                     |

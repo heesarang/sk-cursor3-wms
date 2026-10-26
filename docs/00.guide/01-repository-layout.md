@@ -24,6 +24,9 @@
 | `docs/01.analysis/03.tasks/`        | Task 정의서 (`*.task.md`)                    |
 | `docs/01.analysis/04.ui/`           | UI 설계 HTML·Mock JSON                      |
 | `database/schemas/`                 | DDL, 초기 데이터 SQL                           |
+| `database/init/`, `tools/`, `seeds/`, `migrations/` | 권한 조회 SQL, 표준 점검·초기화 SQL, 시드(강사 배포), 변경 이력 |
+| `database/certs/`                   | DB 서버 확인용 공개 CA 인증서 (접속 방법은 `docs/00.guide/DB-CONNECT.md`) |
+| `scripts/`                          | 백엔드 기동·종료, API 검증 Bash 스크립트 |
 | `backend/`                          | Spring Boot 소스 (Java 21, MyBatis, Gradle) |
 | `frontend/`                         | Vue 3 CDN 소스 (Element Plus, Tailwind CSS) |
 | `.cursor/rules/`                    | Rules — 프로젝트 지침 (`.mdc`)                  |
@@ -31,7 +34,7 @@
 | `.cursor/skills/`                   | Skills — 작업 패턴 참고서 (`SKILL.md`)           |
 | `.cursor/agents/`                   | Agents — 서브에이전트 정의 (`.md`)                |
 | `.cursor/hooks/`                    | Hooks — 자동 실행 스크립트 (`.sh`)                |
-| `.cursor/hooks.json`                | Hooks 설정 (어떤 이벤트에 어떤 스크립트를 실행할지)          |
+| `.cursor/hooks.json.example`                | Hooks 설정 예시 (복사해 `hooks.json`으로 사용. 어떤 이벤트에 어떤 스크립트를 실행할지)          |
 
 
 ## 4. 실습
@@ -51,7 +54,7 @@
 | Commands 파일들 | `.cursor/commands/*.md`     |
 | Skills 폴더들   | `.cursor/skills/*/SKILL.md` |
 | Agents 파일들   | `.cursor/agents/*.md`       |
-| Hooks 설정     | `.cursor/hooks.json`        |
+| Hooks 설정     | `.cursor/hooks.json.example`        |
 | Hook 스크립트들   | `.cursor/hooks/*.sh`        |
 
 
@@ -67,6 +70,6 @@
 
 ## 6. 핵심 포인트
 
-문서 파이프라인은 경로 규약이 곧 계약입니다. 에이전트가 산출물을 엉뚱한 경로에 만들면 다른 에이전트가 참조하지 못합니다. 이 경로 구조는 Rules(`project.common.mdc`, `wms-docs-pipeline.mdc`)에도 명시되어 있어서, 에이전트가 작업할 때 자동으로 참조합니다.
+문서 파이프라인은 경로 규약이 곧 계약입니다. 에이전트가 산출물을 엉뚱한 경로에 만들면 다른 에이전트가 참조하지 못합니다. 이 경로 구조는 Rules(`01-project-context.mdc` 등)에도 명시되어 있어서, 에이전트가 작업할 때 자동으로 참조합니다.
 
-→ 다음: [02-rules.md](https://www.genspark.ai/02-rules.md)
+→ 다음: [02-rules.md](02-rules.md)

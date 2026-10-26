@@ -151,4 +151,4 @@ alwaysApply: false
 
 
 
-→ 다음: [03-commands.md](http://03-commands.md)
+→ 다음: [03-commands.md](03-commands.md)

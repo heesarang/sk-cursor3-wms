@@ -49,7 +49,7 @@
 
 사용자가 수정 제안을 승인하면:
 1. 해당 규칙 파일을 수정합니다
-2. 규칙 작성 가이드라인(rule-authoring-guidelines.mdc)을 준수합니다
+2. 규칙 작성 가이드라인(00-rule-authoring.mdc)을 준수합니다
 3. 수정된 내용을 요약해서 보여줍니다
 
 새 규칙이 필요한 경우:
@@ -126,5 +126,5 @@ alwaysApply: [true|false]
 
 ## 참고 자료
 
-- 규칙 작성 가이드라인: `.cursor/rules/rule-authoring-guidelines.mdc`
+- 규칙 작성 가이드라인: `.cursor/rules/00-rule-authoring.mdc`
 - 기존 규칙 목록: `.cursor/rules/` 디렉토리 확인

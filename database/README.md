@@ -117,7 +117,7 @@ PRD의 업무 규칙 하나하나가 DDL의 어떤 테이블·컬럼·제약조�
 
 ### 2-5. 팀 기준 모델 확정
 
-실무에서도 여러 초안 중 하나를 팀 기준으로 정한다. 강사가 배포하는 기준 DDL과 자기 초안을 비교한다.
+실무에서도 여러 초안 중 하나를 팀 기준으로 정한다. 강사가 배포하는 기준 DDL(`database/schemas/기준_wms_ddl.sql`)과 자기 초안을 비교한다.
 
 ```text
 @wms_ddl.sql @기준_wms_ddl.sql 두 파일의 모델링 차이를 설명해줘.
@@ -146,7 +146,7 @@ psql -W -v ON_ERROR_STOP=1 -f database/init/00_roles.sql
 
 ### 3-2. 시드 (본인 학생 계정으로)
 
-강사가 배포하는 `seeds/*.sql` 4종을 순서대로 적용한다.
+강사가 배포해 `database/seeds/`에 놓는 `*.sql` 4종을 순서대로 적용한다.
 
 ```bash
 for f in seed_common_code seed_master seed_transition_rule seed_sample_order; do

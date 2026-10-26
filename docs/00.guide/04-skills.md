@@ -8,7 +8,7 @@ Skills는 특정 작업 유형에 대한 형식과 절차를 정의한 참고서
 
 Rules가 "이렇게 해라"는 정적 지침이라면, Skills는 "이 작업은 이런 구조로 한다"는 작업 패턴 카드이다. Rules는 파일 매칭이나 설정에 의해 컨텍스트에 자동 주입되지만, Skills는 에이전트가 작업 내용을 보고 능동적으로 참조한다는 점이 다르다.
 
-## 2. [SKILL.md](http://skill.md/) 형식
+## 2. SKILL.md 형식
 
 각 스킬 폴더의 `SKILL.md` 상단에 YAML 프론트매터를 작성한다.
 
@@ -170,4 +170,4 @@ backend/src 하위의 SampleTest 관련 Java 파일 제거해.
 
 
 
-→ 다음: [05-agents.md](https://www.genspark.ai/05-agents.md)
+→ 다음: [05-agents.md](05-agents.md)
