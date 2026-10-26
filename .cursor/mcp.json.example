@@ -1,3 +1,12 @@
 {
-  "mcpServers": {}
+  "mcpServers": {
+    "postgres": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@microsoft/postgres-mcp", "run"],
+      "env": {
+        "POSTGRES_MCP_DEFAULT_PROFILE": "wms-lab"
+      }
+    }
+  }
 }
