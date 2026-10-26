@@ -26,7 +26,7 @@
 
 학생별 DB와 로그인 계정은 강사가 미리 생성한다. 1번은 `student01` → `wms01`, 2번은 `student02` → `wms02`처럼 배정되며 각 DB의 기본 스키마는 `wms`다. 본인 계정으로 DDL 작성·적용, 데이터 조회·수정, 앱 연결을 모두 수행한다. 별도의 소유자·앱·조회 전용 계정을 생성하지 않는다.
 
-**DB 외부 접속 개방 공지 후 진행한다.** DBeaver에는 강사가 안내한 최종 Host, Port 5432, 본인 Database·Username·Password 및 TLS 설정을 입력한다. 학생은 SSH 터널·키 파일을 사용하지 않는다. PostgreSQL 서버는 PC에 설치하지 않아도 된다.
+접속 절차는 `docs/00.guide/DB-CONNECT.md`를 따른다. **DB 외부 접속 개방 공지 후 진행한다.** DBeaver에는 강사가 안내한 최종 Host, Port 5432, 본인 Database·Username·Password 및 TLS 설정을 입력한다. 학생은 SSH 터널·키 파일을 사용하지 않는다. PostgreSQL 서버는 PC에 설치하지 않아도 된다.
 
 아래 명령은 `psql` 클라이언트가 설치된 Git Bash/WSL 등의 셸용이다. 강사가 안내한 `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`와 최종 TLS 관련 환경변수를 설정한 뒤 실행한다. 비밀번호는 `-W` 프롬프트에 입력하며 URL·명령문·Git에 기록하지 않는다. 이 변수들은 아래 Spring Boot 접속 변수와 별개다. psql이 없으면 조회 SQL은 DBeaver에서 실행할 수 있지만, `std_check.sql` 등 psql 전용 명령이 있는 파일은 psql이 필요하다.
 
