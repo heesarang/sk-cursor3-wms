@@ -27,7 +27,7 @@
 | `database/init/`, `tools/`, `seeds/`, `migrations/` | 권한 조회 SQL, 표준 점검·초기화 SQL, 시드(강사 배포), 변경 이력 |
 | `database/certs/`                   | DB 서버 확인용 공개 CA 인증서 (접속 방법은 `docs/00.guide/DB-CONNECT.md`) |
 | `scripts/`                          | 백엔드 기동·종료, API 검증 Bash 스크립트 |
-| `backend/`                          | Spring Boot 소스 (Java 21, MyBatis, Gradle) |
+| `backend/`                          | Spring Boot 소스 (Java 21, MyBatis, Gradle) — [13-gradle.md](13-gradle.md) |
 | `frontend/`                         | Vue 3 CDN 소스 (Element Plus, Tailwind CSS) |
 | `.cursor/rules/`                    | Rules — 프로젝트 지침 (`.mdc`)                  |
 | `.cursor/commands/`                 | Commands — 슬래시 커맨드 (`.md`)                |
@@ -35,6 +35,9 @@
 | `.cursor/agents/`                   | Agents — 서브에이전트 정의 (`.md`)                |
 | `.cursor/hooks/`                    | Hooks — 자동 실행 스크립트 (`.sh`)                |
 | `.cursor/hooks.json.example`                | Hooks 설정 예시 (복사해 `hooks.json`으로 사용. 어떤 이벤트에 어떤 스크립트를 실행할지)          |
+| `.cursor/mcp.json.example`                  | MCP 설정 예시 (복사해 `mcp.json`으로 사용. PostgreSQL MCP — [11-mcp.md](11-mcp.md)) |
+| `.vscode/settings.json.example`             | Live Server 웹 루트 `frontend/` 예시 — [12-live-server.md](12-live-server.md) |
+| `.vscode/settings.json.example`             | Live Server 웹 루트 `frontend/` 예시 — [12-live-server.md](12-live-server.md) |
 
 
 ## 4. 실습

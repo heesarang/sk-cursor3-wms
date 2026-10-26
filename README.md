@@ -23,13 +23,19 @@ Cursor를 활용해 창고관리 시스템(WMS)을 구현하는 실습입니다.
 
 DB 주소·학생 계정 입력·DBeaver 설정은 [DB 접속 안내](docs/00.guide/DB-CONNECT.md)를 참고하세요. **허용된 네트워크에서 TLS(암호화)로 접속하며 인증서 파일은 필요 없습니다.**
 
+Cursor에서 PostgreSQL MCP를 쓰려면 [MCP 설정 매뉴얼](docs/00.guide/11-mcp.md)을 따르세요. `.cursor/mcp.json`은 Git에 올리지 않습니다.
+
+백엔드는 [Gradle 빌드·실행 매뉴얼](docs/00.guide/13-gradle.md)대로 JDK·`SPRING_DATASOURCE_*`·`bootRun`을 맞춥니다.
+
+프론트 화면은 [Live Server 설치·실행 매뉴얼](docs/00.guide/12-live-server.md)대로 `frontend/index.html`을 띄우고, 백엔드(`8080`)와 `frontend/js/api.js`의 `API_BASE`를 맞춥니다.
+
 ## 폴더 구성
 
 - `.cursor/`: Rules 7종, Commands 6종, Skills 2종, Agents 8종과 Hooks 예시
 - `backend/`: Gradle 기반, 실행 설정 예시. 애플리케이션 소스 미작성
-- `frontend/`: 구현 전 빈 작업 영역
+- `frontend/`: Vue 3 CDN SPA (`index.html`, `views/`, `components/`)
 - `database/`: DDL·시드·DB 검증 도구
 - `docs/`: 기본 PRD, 개발 표준, 실습 가이드
 - `scripts/`: Bash 기반 기동·종료·API 검증 도구. 구현 완료 후 사용
 
-Hooks는 `.cursor/hooks.json.example`로만 제공합니다. Bash·Python 등 실행 환경 확인 후 필요하면 `hooks.json`으로 복사합니다. 예시 Hook은 보안 경계나 완전한 명령 차단 도구가 아닙니다. MCP는 선택 사항이며 실제 연결 설정은 배포하지 않습니다.
+Hooks는 `.cursor/hooks.json.example`로만 제공합니다. Bash·Python 등 실행 환경 확인 후 필요하면 `hooks.json`으로 복사합니다. 예시 Hook은 보안 경계나 완전한 명령 차단 도구가 아닙니다. MCP는 `.cursor/mcp.json.example`만 배포하며, 연결 프로필·비밀번호는 각자 PC에서 등록합니다.
