@@ -21,7 +21,7 @@ Cursor를 활용해 창고관리 시스템(WMS)을 구현하는 실습입니다.
 
 실제 DB 접속 정보는 환경변수로 전달합니다. `.env.example`은 변수 목록일 뿐 Spring Boot가 자동으로 읽는 파일이 아닙니다. `backend/src/main/resources/application.yml.example`을 같은 폴더의 `application.yml`로 복사하여 사용합니다.
 
-DB 주소·학생 계정 입력·DBeaver 설정은 [DB 접속 안내](docs/00.guide/DB-CONNECT.md)를 참고하세요. **허용된 네트워크에서 TLS와 배포된 CA 인증서로 접속합니다.**
+DB 주소·학생 계정 입력·DBeaver 설정은 [DB 접속 안내](docs/00.guide/DB-CONNECT.md)를 참고하세요. **허용된 네트워크에서 TLS(암호화)로 접속하며 인증서 파일은 필요 없습니다.**
 
 ## 폴더 구성
 

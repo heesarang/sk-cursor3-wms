@@ -1,6 +1,6 @@
 # DB 접속 안내 (AWS PostgreSQL)
 
-> **허용된 네트워크에서 TLS로 직접 접속한다.** 실습 DB는 AWS PostgreSQL 17 서버이며 PC에 PostgreSQL 서버를 설치하지 않는다. 학생은 SSH 터널·개인 키 파일 없이 DBeaver로 접속하며, 서버 확인용 공개 CA 인증서만 등록한다.
+> **허용된 네트워크에서 TLS(암호화)로 직접 접속한다.** 실습 DB는 AWS PostgreSQL 17 서버이며 PC에 PostgreSQL 서버를 설치하지 않는다. 학생은 SSH 터널·개인 키 파일·인증서 파일 없이 DBeaver로 접속한다.
 
 접속 확인일: **2026-10-26**. 외부 TLS 접속이 활성화되어 있으며 강사가 허용한 공인 IP에서만 연결할 수 있다. 서버 주소는 고정 IP가 아니므로 교육 시작 전 환경 공지(Notion)를 확인한다.
 
@@ -17,7 +17,7 @@
 | Database | `wmsNN` | 본인 번호. 1번이면 `wms01` |
 | Username | `studentNN` | 1번이면 `student01` |
 | Password | 개별 전달받은 최신 비밀번호 | 이전에 저장한 값이 있다면 최신 값으로 교체 |
-| SSL/TLS | `verify-full` | CA 인증서: `database/certs/training-db-ca.crt` |
+| SSL/TLS | `require` | 암호화만 사용. 인증서 파일은 필요 없음 |
 | SSH | 사용하지 않음 | 학생에게 SSH 키를 배포하지 않음 |
 | 기본 스키마 | `wms` | 빈 스키마가 미리 있다 |
 
@@ -30,7 +30,7 @@
 1. 상단 메뉴 `Database` › `New Database Connection`을 연다.
 2. `PostgreSQL`을 선택하고 `Next`를 누른다.
 3. `Main` 탭에 Host, Port, Database, Username, Password를 입력한다. `Show all databases`는 끈다.
-4. `SSH` 터널은 끈다. `SSL` 탭에서 `Use SSL`을 켜고 SSL mode를 `verify-full`로 설정한다. `CA Certificate`에 내려받은 `database/certs/training-db-ca.crt`의 절대 경로를 지정한다. `Client Certificate`와 `Client Private Key`는 비워 둔다. 인증서·호스트 검증을 끄지 않는다. 같은 설정을 Driver properties에서 할 경우 `sslmode=verify-full`, `sslrootcert=CA 인증서의 절대 경로`를 지정한다.
+4. `SSH` 터널은 끈다. `SSL` 탭에서 `Use SSL`을 켜고 SSL mode를 `require`로 설정한다. `CA Certificate`, `Client Certificate`, `Client Private Key`는 모두 비워 둔다. SSL을 끄거나 `disable`로 두지 않는다. Driver properties로 설정할 때는 `sslmode=require`만 지정한다.
 5. `Test Connection`을 누른다. 드라이버 다운로드 창이 뜨면 `Download`를 누른다.
 6. `Connection is established`가 나오면 `Finish`를 누른다.
 7. SQL 편집기(`Ctrl+]`)에서 아래 SQL을 실행한다.
@@ -48,28 +48,28 @@ SELECT current_database(), current_user, current_schema(), version();
 ```bash
 # 저장소 루트에서 실행. 본인 번호와 공지된 최신 주소로 수정한다.
 export PGHOST="<환경 공지의 Host>" PGPORT="5432" PGDATABASE="wms01" PGUSER="student01"
-export PGSSLMODE="verify-full" PGSSLROOTCERT="$(pwd)/database/certs/training-db-ca.crt"
+export PGSSLMODE="require"
 psql -W -v ON_ERROR_STOP=1 -c "SELECT current_database(), current_user, current_schema();"
 ```
 
 비밀번호는 `-W` 프롬프트에 입력한다. 명령문·스크립트·Git에 비밀번호를 적지 않는다. PowerShell이면 `export` 대신 `$env:PGHOST="<Host>"`처럼 한 줄씩 설정한다.
 
-CA 인증서는 공개 배포 파일이며 계정 비밀번호나 SSH 개인 키가 아니다. 강사에게 직접 전달받은 파일을 써도 된다.
+인증서 파일은 필요 없다. `require`는 통신을 암호화하지만 접속한 서버가 진짜인지는 확인하지 않는다. 서버 확인까지 하려면 6절의 선택 옵션을 쓴다.
 
 ## 4. Spring Boot 연결 (개발 단계)
 
 Spring Boot는 `.env.example`을 자동으로 읽지 않는다. 터미널 또는 IDE 실행 설정에 환경변수를 넣는다.
 
 ```bash
-# 본인 DB명과 CA 인증서의 실제 절대 경로로 수정한다.
-export SPRING_DATASOURCE_URL="jdbc:postgresql://<환경 공지의 Host>:5432/wms01?currentSchema=wms&sslmode=verify-full&sslrootcert=<저장소 절대경로>/database/certs/training-db-ca.crt"
+# 본인 DB명으로 수정한다.
+export SPRING_DATASOURCE_URL="jdbc:postgresql://<환경 공지의 Host>:5432/wms01?currentSchema=wms&sslmode=require"
 export SPRING_DATASOURCE_USERNAME="student01"
 # 비밀번호를 명령 기록에 직접 남기지 않고 입력한다 (Git Bash).
 read -r -s -p "DB password: " SPRING_DATASOURCE_PASSWORD
 export SPRING_DATASOURCE_PASSWORD
 ```
 
-위 JDBC URL의 인증서 경로는 예시다. 본인 PC에 저장한 인증서 경로로 바꾸고, 공백·특수문자가 있으면 URL 인코딩한다. 접속 주소가 바뀌면 JDBC URL도 수정한다. 환경변수와 psql용 `PG...` 변수는 별개이며, 실제 비밀번호를 코드·공개 파일·명령 기록에 남기지 않는다.
+접속 주소가 바뀌면 JDBC URL도 수정한다. 환경변수와 psql용 `PG...` 변수는 별개이며, 실제 비밀번호를 코드·공개 파일·명령 기록에 남기지 않는다.
 
 ## 5. 접속이 안 될 때
 
@@ -79,13 +79,26 @@ export SPRING_DATASOURCE_PASSWORD
 | `password authentication failed` | 비밀번호·계정 오타, 다른 번호 계정 | 번호 확인, Caps Lock 확인 |
 | `database "wmsNN" does not exist` | Database 번호 오타 | 본인 번호 재확인 |
 | `no pg_hba.conf entry ... SSL` | SSL 모드 불일치 | SSL 탭을 강사 안내대로 수정 |
+| `certificate verify failed`, `PKIX path building failed` | 검증 모드(`verify-ca`·`verify-full`)나 CA 경로가 설정에 남아 있음 | SSL mode를 `require`로 바꾸고 CA 항목을 비운다. 계속되면 강사 호출 |
 | `current_schema()`가 `public` | 기본 스키마 미설정 | `SET search_path TO wms;` |
 | `permission denied for schema wms` | 권한 문제 | `database/init/00_roles.sql` 결과를 강사에게 보여 준다 |
 | DBeaver가 드라이버 다운로드 실패 | 사내망 프록시 | 강사 호출 |
 
 3분 안에 풀리지 않으면 혼자 시간을 쓰지 말고 손을 든다.
 
-## 6. 하지 않는 것
+## 6. 서버 신원 확인 (선택)
+
+기본 접속은 `require`다. 접속한 서버가 진짜인지까지 확인하고 싶으면 공개 CA 인증서(`database/certs/training-db-ca.crt`)로 `verify-full`을 쓸 수 있다. 필수가 아니며, 실습은 `require`로 진행한다.
+
+| 도구 | 변경 |
+|---|---|
+| DBeaver | SSL mode를 `verify-full`로 바꾸고 `CA Certificate`에 위 파일의 절대 경로를 지정한다 |
+| psql | `export PGSSLMODE="verify-full" PGSSLROOTCERT="$(pwd)/database/certs/training-db-ca.crt"` |
+| Spring Boot | JDBC URL의 `sslmode=require`를 `sslmode=verify-full&sslrootcert=<절대경로>`로 바꾼다 |
+
+서버 주소가 바뀌면 인증서에 적힌 이름과 달라 `verify-full`이 실패할 수 있다. 그때는 `require`로 돌아간다. TLS를 끄는 `disable`은 어떤 경우에도 쓰지 않는다.
+
+## 7. 하지 않는 것
 
 - 다른 학생 DB·계정으로 접속하지 않는다.
 - `postgres` 같은 관리자 계정을 요청하거나 시도하지 않는다.
