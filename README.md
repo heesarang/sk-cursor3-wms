@@ -14,10 +14,10 @@ Cursor를 활용해 창고관리 시스템(WMS)을 구현하는 실습입니다.
 
 ## 시작하기
 
-1. 이 저장소 루트를 Cursor에서 엽니다.
-2. `docs/00.guide/START-HERE.md`에서 시작 상태를 확인합니다.
-3. 기본 PRD와 `.cursor/rules/`를 읽습니다.
-4. DB 모델링·기준 모델 확정 후 개발을 진행합니다.
+1. [프로그램 목록·다운로드](docs/00.guide/setup/00-downloads.md)와 [Cursor 설치·첫 실행](docs/00.guide/setup/00-cursor.md)을 따라 준비한 뒤 이 저장소 루트를 Cursor에서 엽니다.
+2. [실습 시작 안내](docs/00.guide/START-HERE.md)에서 시작 상태를 확인합니다.
+3. [실습 수행 순서와 환경 준비](docs/00.guide/PRACTICE-ORDER.md)를 따라 분석 → DB 모델링 → Java·Gradle·DB 접속·MCP·Live Server 준비를 진행합니다.
+4. [08번 순차 개발](docs/00.guide/08-sequential-dev.md)의 `@db-architect`로 모델 적용·검증을 마친 뒤 UI·백엔드·프론트엔드 개발을 이어 갑니다.
 
 실제 DB 접속 정보는 환경변수로 전달합니다. `.env.example`은 변수 목록일 뿐 Spring Boot가 자동으로 읽는 파일이 아닙니다. `backend/src/main/resources/application.yml.example`을 같은 폴더의 `application.yml`로 복사하여 사용합니다.
 

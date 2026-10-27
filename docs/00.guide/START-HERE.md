@@ -1,8 +1,14 @@
 # 실습 시작 안내
 
+## 처음 준비한다면
+
+먼저 [프로그램 목록과 공식 다운로드 링크](setup/00-downloads.md)를 확인하고 [Cursor 다운로드·설치·첫 실행](setup/00-cursor.md)을 따라 실습 폴더를 엽니다. 설치된 도구는 다시 설치하지 않고 버전과 실행 여부를 확인합니다.
+
 ## 실습 흐름
 
 WMS 요구사항을 읽고 DB 모델을 설계한 뒤, 백엔드와 프론트엔드를 구현하고 동작을 검증합니다.
+
+실제 수행 순서는 [WMS 실습 수행 순서와 환경 준비](PRACTICE-ORDER.md)를 따릅니다. 08번의 `@analyst` 이후 모델링을 진행하고, Java·Gradle·DBeaver·MCP·Live Server를 준비한 다음 `@db-architect`의 SQL 적용·검증으로 넘어갑니다.
 
 ## 제공하는 것
 
