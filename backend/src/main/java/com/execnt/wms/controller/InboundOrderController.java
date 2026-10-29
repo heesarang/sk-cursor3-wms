@@ -38,6 +38,12 @@ public class InboundOrderController {
         return success(data);
     }
 
+    @Operation(summary = "입고 주문 등록")
+    @PostMapping
+    public Map<String, Object> create(@RequestBody Map<String, Object> body) {
+        return success(inboundOrderService.createOrder(body));
+    }
+
     @Operation(summary = "입고 주문 상세 조회")
     @GetMapping("/{orderNo}")
     public Map<String, Object> detail(

@@ -12,7 +12,9 @@ const app = Vue.createApp({
 app.component('AppNav', AppNav);
 app.component('StatusTag', StatusTag);
 app.component('InboundDetail', InboundDetail);
+app.component('InboundCreate', InboundCreate);
 app.component('OutboundDetail', OutboundDetail);
+app.component('OutboundCreate', OutboundCreate);
 
 app.use(ElementPlus);
 app.use(router);

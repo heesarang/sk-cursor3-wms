@@ -6,7 +6,10 @@ const OutboundList = {
   components: { OutboundDetail, StatusTag },
   template: `
     <div>
-      <h1 class="text-xl font-semibold text-slate-800 mb-4">출고 주문 관리</h1>
+      <div class="flex items-center justify-between mb-4">
+        <h1 class="text-xl font-semibold text-slate-800">출고 주문 관리</h1>
+        <el-button type="success" @click="openCreate">출고 등록</el-button>
+      </div>
 
       <div class="bg-white border border-slate-200 rounded-lg p-4 mb-4 flex flex-wrap items-end gap-3">
         <div>
@@ -64,6 +67,16 @@ const OutboundList = {
               {{ formatDateTime(row.ordered_at) }}
             </template>
           </el-table-column>
+          <el-table-column prop="partner_contact_name" label="담당자 이름" min-width="120">
+            <template #default="{ row }">
+              {{ row.partner_contact_name || '-' }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="partner_contact_tel" label="담당자 연락처" min-width="140">
+            <template #default="{ row }">
+              {{ row.partner_contact_tel || '-' }}
+            </template>
+          </el-table-column>
         </el-table>
       </div>
 
@@ -88,10 +101,17 @@ const OutboundList = {
   },
   mounted() {
     this.fetchList();
+    window.addEventListener('wms-outbound-created', this.fetchList);
+  },
+  beforeUnmount() {
+    window.removeEventListener('wms-outbound-created', this.fetchList);
   },
   methods: {
     formatCenter,
     formatDateTime,
+    openCreate() {
+      window.dispatchEvent(new CustomEvent('wms-open-outbound-create'));
+    },
     buildParams() {
       const params = {};
       if (this.filter.center_no) params.center_no = this.filter.center_no;

@@ -7,7 +7,7 @@
 | 스키마 | `wms` (테이블 접두어 없음) |
 | 기준 DDL | `database/schemas/wms_ddl.sql` |
 | 개념 모델 | `database/docs/wms-model.md` |
-| 범위 | F1~F4 (재고·로케이션·거래처·인증 제외) |
+| 범위 | F1~F4 + F6 재고 잔량·이력 (로케이션·실사·인증 제외) |
 | 적용 DB 예 | `wms17` / `student17` / schema `wms` |
 
 ---
@@ -26,6 +26,8 @@
 | 8 | `outbound_order_line` | 출고 주문 라인 | 트랜잭션 | `seed_sample_order.sql` |
 | 9 | `status_transition_rule` | 상태 전이 규칙 | 규칙 | `seed_transition_rule.sql` |
 | 10 | `order_status_history` | 주문 상태 이력 | 이력 | `seed_sample_order.sql` |
+| 11 | `inventory_balance` | 센터×SKU 재고 잔량 | 트랜잭션 | `seed_inventory.sql` |
+| 12 | `inventory_history` | 재고 증감 이력 | 이력 | `seed_inventory.sql` |
 
 모든 테이블 공통 컬럼(맨 뒤): `created_at`, `updated_at`, `created_by`, `updated_by`.
 
@@ -89,7 +91,9 @@
 | `center_info_id` | BIGINT | N | FK → `center_info` |
 | `status_code` | VARCHAR(10) | N | 입고 상태 (코드그룹: INB_STATUS). 물리 FK 없음 |
 | `ordered_at` | TIMESTAMPTZ | N | 주문 일시 |
-| 공통 4종 | — | N | |
+| 공통 4종 | — | N | `created_at` / `updated_at` / `created_by` / `updated_by` |
+| `partner_contact_tel` | VARCHAR(20) | Y | 거래처 담당자 연락처 (예: 010-1234-5678). 공통 컬럼 **뒤** (migration `20261029_001_add_contact_tel_to_inbound_order.sql`) |
+| `partner_contact_name` | VARCHAR(100) | Y | 거래처 담당자 이름 (예: 홍길동). `partner_contact_tel` **다음** (migration `20261029_002_add_contact_name_to_inbound_order.sql`) |
 
 인덱스: `inbound_order_ix1` (`center_info_id`, `status_code`).
 
@@ -113,6 +117,14 @@
 
 입고와 대칭. `status_code`는 코드그룹 OUT_STATUS.  
 시드 핵심: `OB-CTR01-001`(00), `OB-CTR01-010`(10), `OB-CTR01-020`(20), `OB-DONE`(90), `OB-CTR02-001`(00).
+
+| 컬럼 | 타입 | NULL | 설명 |
+|------|------|------|------|
+| (핵심·공통) | — | — | `inbound_order`와 대칭 (`outbound_order_id`, `order_no`, `center_info_id`, `status_code`, `ordered_at`, 공통 4종) |
+| `partner_contact_name` | VARCHAR(100) | Y | 거래처 담당자 이름 (예: 홍길동). 공통 컬럼 **뒤** (migration `20261029_003_add_contact_to_outbound_order.sql`) |
+| `partner_contact_tel` | VARCHAR(20) | Y | 거래처 담당자 연락처 (예: 010-1234-5678). `partner_contact_name` **다음** |
+
+인덱스: `outbound_order_ix1` (`center_info_id`, `status_code`).
 
 ### 2.8 `outbound_order_line` — 출고 주문 라인
 
@@ -151,6 +163,40 @@ UK: (`order_kind`, `from_status_code`, `to_status_code`).
 
 시드: `IB-CTR01-020` 이력 2건(trace), `IB-INVALID-TRANS`·`OB-DONE` 완료 경로, 기타 최근 이력 포함(총 12건).
 
+### 2.11 `inventory_balance` — 센터×SKU 재고 잔량
+
+| 컬럼 | 타입 | NULL | 설명 |
+|------|------|------|------|
+| `inventory_balance_id` | BIGINT IDENTITY | N | PK |
+| `center_info_id` | BIGINT | N | FK → `center_info`. UK with `item_info_id` (`inventory_balance_ux1`) |
+| `item_info_id` | BIGINT | N | FK → `item_info` |
+| `qty_on_hand` | NUMERIC(12,0) | N | 가용 재고 ≥ 0 (`inventory_balance_ck1`) |
+| 공통 4종 | — | N | |
+
+인덱스: `inventory_balance_ix1` (`item_info_id`).
+
+시드: 활성 센터×활성 품목마다 `qty_on_hand=1000` (예: CTR01/CTR02 × SKU-AAA/BBB/CCC = 6행). migration `20261029_004_inventory.sql` / `seed_inventory.sql`. 기존 확정(90) 주문 역산 없음.
+
+### 2.12 `inventory_history` — 재고 증감 이력
+
+| 컬럼 | 타입 | NULL | 설명 |
+|------|------|------|------|
+| `inventory_history_id` | BIGINT IDENTITY | N | PK |
+| `inventory_balance_id` | BIGINT | N | FK → `inventory_balance` |
+| `txn_type_code` | VARCHAR(20) | N | 코드그룹 INV_TXN_TYPE: INBOUND / OUTBOUND / INIT |
+| `change_qty` | NUMERIC(12,0) | N | 변동 수량 (입고·INIT +, 출고 −) |
+| `after_qty` | NUMERIC(12,0) | N | 반영 후 잔량 ≥ 0 (`inventory_history_ck1`) |
+| `order_kind` | VARCHAR(20) | Y | ORDER_KIND. INIT는 NULL. 물리 FK 없음 |
+| `order_no` | VARCHAR(50) | Y | 참조 주문번호. INIT는 NULL |
+| `line_no` | INT | Y | 참조 라인 순번 (선택) |
+| `changed_by` | VARCHAR(50) | N | 반영 수행자 |
+| `changed_at` | TIMESTAMPTZ | N | 반영 일시 |
+| 공통 4종 | — | N | |
+
+인덱스: `inventory_history_ix1` (`inventory_balance_id`, `changed_at`), `ix2` (`order_kind`, `order_no`, `changed_at`), `ix3` (`changed_at`).
+
+시드: 잔량행당 INIT 1건 (`change_qty=1000`, `after_qty=1000`).
+
 ---
 
 ## 3. 공통코드 매핑
@@ -180,6 +226,14 @@ UK: (`order_kind`, `from_status_code`, `to_status_code`).
 | INBOUND | 입고 | 1 |
 | OUTBOUND | 출고 | 2 |
 
+### 3.4 `INV_TXN_TYPE` — 재고 거래 유형
+
+| code_value | code_name | sort_order |
+|------------|-----------|------------|
+| INBOUND | 입고 반영 | 1 |
+| OUTBOUND | 출고 반영 | 2 |
+| INIT | 초기재고 | 3 |
+
 상태·구분값은 ENUM/CHECK IN으로 고정하지 않으며, 공통코드·전이 규칙 테이블로 관리한다.
 
 ---
@@ -195,7 +249,11 @@ UK: (`order_kind`, `from_status_code`, `to_status_code`).
 | `item_info` | `inbound_order_line` | 1:N | `inbound_order_line_item_info_fk` |
 | `item_info` | `outbound_order_line` | 1:N | `outbound_order_line_item_info_fk` |
 | `code_group` | `common_code` | 1:N | `common_code_code_group_fk` |
+| `center_info` | `inventory_balance` | 1:N | `inventory_balance_center_info_fk` |
+| `item_info` | `inventory_balance` | 1:N | `inventory_balance_item_info_fk` |
+| `inventory_balance` | `inventory_history` | 1:N | `inventory_history_inventory_balance_fk` |
 | (논리) 주문 헤더 | `order_status_history` | 1:N | 없음 — `order_kind`+`order_no` |
+| (논리) 주문 헤더 | `inventory_history` | 1:N | 없음 — `order_kind`+`order_no` (+`line_no`) |
 | (논리) `status_transition_rule` | 주문 헤더 | — | 없음 — 전이 검증 시 조회 |
 
 `ON DELETE CASCADE` 없음. FK 컬럼은 인덱스 선두(UNIQUE 또는 명시 인덱스).
@@ -210,6 +268,7 @@ UK: (`order_kind`, `from_status_code`, `to_status_code`).
 | 2 | `database/seeds/seed_master.sql` | CTR01/CTR02, SKU-* |
 | 3 | `database/seeds/seed_transition_rule.sql` | 입·출고 전이 각 3건 |
 | 4 | `database/seeds/seed_sample_order.sql` | 샘플 주문·라인·이력 |
+| 5 | `database/seeds/seed_inventory.sql` | INV_TXN_TYPE, 잔량 1000, INIT 이력 |
 
 재실행: 업무 UK에 `ON CONFLICT DO UPDATE`, 이력은 `WHERE NOT EXISTS`. `created_by`/`updated_by` = `'seed'`.
 
@@ -222,6 +281,7 @@ UK: (`order_kind`, `from_status_code`, `to_status_code`).
 | 센터·SKU·주문번호 중복 금지 | UNIQUE |
 | 라인 순번 주문 내 유일 | UNIQUE(주문_id, line_no) |
 | 수량 ≥ 0, 검수/피킹 ≤ 주문 | CHECK |
+| 재고 가용 ≥ 0, 센터×SKU 유일 | CHECK / UNIQUE(`inventory_balance`) |
 | 허용 전이만 가능 | App이 `status_transition_rule` 조회 (DB는 규칙 행 UX) |
-| 전이+이력 동일 트랜잭션 | App |
+| 전이+재고증감+이력 동일 트랜잭션 | App |
 | 마스터 물리 삭제 금지 | `is_active` + App/운영 |

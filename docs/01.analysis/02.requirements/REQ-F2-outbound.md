@@ -45,7 +45,7 @@
 
 | 개념 | 예상 테이블 | 핵심 속성 |
 |------|-------------|-----------|
-| 출고 주문 | `outbound_order` | order_no(UX), center_info_id, status_code, ordered_at |
+| 출고 주문 | `outbound_order` | order_no(UX), center_info_id, status_code, ordered_at, partner_contact_name, partner_contact_tel |
 | 출고 라인 | `outbound_order_line` | outbound_order_id, line_no, item_info_id, order_qty, picked_qty |
 | 이력·규칙 | `order_status_history`, `status_transition_rule` | order_kind=`OUTBOUND` |
 
@@ -70,7 +70,9 @@
       "center_name": "서울센터",
       "status_code": "10",
       "status_name": "피킹중",
-      "ordered_at": "2026-05-14T10:00:00+09:00"
+      "ordered_at": "2026-05-14T10:00:00+09:00",
+      "partner_contact_name": "홍길동",
+      "partner_contact_tel": "010-1234-5678"
     }
   ]
 }
@@ -101,6 +103,8 @@
     "status_code": "90",
     "status_name": "출고확정",
     "ordered_at": "2026-05-10T11:00:00+09:00",
+    "partner_contact_name": "홍길동",
+    "partner_contact_tel": "010-1234-5678",
     "lines": [
       {
         "line_no": 1,

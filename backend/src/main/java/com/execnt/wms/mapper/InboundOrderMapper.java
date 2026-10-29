@@ -15,4 +15,14 @@ public interface InboundOrderMapper {
     List<Map<String, Object>> selectInboundOrderLines(Map<String, Object> params);
 
     int updateInboundOrderStatus(Map<String, Object> params);
+
+    Long selectActiveCenterIdByNo(Map<String, Object> params);
+
+    Long selectActiveItemIdBySku(Map<String, Object> params);
+
+    Integer selectMaxOrderSeqByCenter(Map<String, Object> params);
+
+    int insertInboundOrder(Map<String, Object> params);
+
+    int insertInboundOrderLine(Map<String, Object> params);
 }

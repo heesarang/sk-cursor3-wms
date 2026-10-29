@@ -37,6 +37,12 @@ const OutboundDetail = {
             <div><span class="text-slate-500">주문일시</span>
               <div class="font-medium">{{ formatDateTime(detail.ordered_at) }}</div>
             </div>
+            <div><span class="text-slate-500">담당자 이름</span>
+              <div class="font-medium">{{ detail.partner_contact_name || '-' }}</div>
+            </div>
+            <div><span class="text-slate-500">담당자 연락처</span>
+              <div class="font-medium">{{ detail.partner_contact_tel || '-' }}</div>
+            </div>
           </div>
 
           <el-table :data="detail.lines || []" border stripe size="small" empty-text="라인 없음">

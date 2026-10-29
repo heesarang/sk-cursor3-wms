@@ -9,7 +9,9 @@
                c.center_name,
                o.status_code,
                cc.code_name AS status_name,
-               o.ordered_at
+               o.ordered_at,
+               o.partner_contact_tel,
+               o.partner_contact_name
           FROM wms.inbound_order o
           JOIN wms.center_info c
             ON c.center_info_id = o.center_info_id
@@ -37,7 +39,9 @@
                c.center_name,
                o.status_code,
                cc.code_name AS status_name,
-               o.ordered_at
+               o.ordered_at,
+               o.partner_contact_tel,
+               o.partner_contact_name
           FROM wms.inbound_order o
           JOIN wms.center_info c
             ON c.center_info_id = o.center_info_id
@@ -74,5 +78,70 @@
          WHERE order_no = #{order_no}
            AND status_code = #{from_status}
     </update>
+
+    <select id="selectActiveCenterIdByNo" parameterType="map" resultType="long">
+        SELECT c.center_info_id
+          FROM wms.center_info c
+         WHERE c.center_no = #{center_no}
+           AND c.is_active = TRUE
+    </select>
+
+    <select id="selectActiveItemIdBySku" parameterType="map" resultType="long">
+        SELECT i.item_info_id
+          FROM wms.item_info i
+         WHERE i.sku_no = #{sku_no}
+           AND i.is_active = TRUE
+    </select>
+
+    <select id="selectMaxOrderSeqByCenter" parameterType="map" resultType="int">
+        SELECT COALESCE(MAX(
+                   CAST(substring(o.order_no FROM '[0-9]+$') AS INTEGER)
+               ), 0)
+          FROM wms.inbound_order o
+         WHERE o.order_no ~ ('^IB-' || #{center_no} || '-[0-9]+$')
+    </select>
+
+    <insert id="insertInboundOrder" parameterType="map"
+            useGeneratedKeys="true" keyProperty="inbound_order_id" keyColumn="inbound_order_id">
+        INSERT INTO wms.inbound_order (
+            order_no,
+            center_info_id,
+            status_code,
+            ordered_at,
+            created_by,
+            updated_by,
+            partner_contact_name,
+            partner_contact_tel
+        ) VALUES (
+            #{order_no},
+            #{center_info_id},
+            #{status_code},
+            now(),
+            #{created_by},
+            #{updated_by},
+            #{partner_contact_name},
+            #{partner_contact_tel}
+        )
+    </insert>
+
+    <insert id="insertInboundOrderLine" parameterType="map">
+        INSERT INTO wms.inbound_order_line (
+            inbound_order_id,
+            line_no,
+            item_info_id,
+            order_qty,
+            inspected_qty,
+            created_by,
+            updated_by
+        ) VALUES (
+            #{inbound_order_id},
+            #{line_no},
+            #{item_info_id},
+            #{order_qty},
+            0,
+            #{created_by},
+            #{updated_by}
+        )
+    </insert>
 
 </mapper>

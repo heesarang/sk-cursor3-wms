@@ -30,14 +30,14 @@
 │ │ 센터 [el-select ▼]  상태 [el-select ▼]  [조회] [초기화]   │ │
 │ └─────────────────────────────────────────────────────────┘ │
 │ ┌─ el-table ──────────────────────────────────────────────┐ │
-│ │ 주문번호 │ 센터 │ 상태(tag) │ 주문일시 │ (행 클릭→상세)   │ │
+│ │ 주문번호 │ 센터 │ 상태(tag) │ 주문일시 │ 담당자 이름 │ 담당자 연락처 │ (행 클릭→상세) │ │
 │ │ ...                                                      │ │
 │ └─────────────────────────────────────────────────────────┘ │
 │ (페이지네이션: 클라이언트 단 선택 — API 미제공 시 전체 표시)   │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─ el-dialog: 입고 주문 상세 ───────────────────────────────┐
-│ 주문번호 / 센터 / 상태(tag) / 주문일시                      │
+│ 주문번호 / 센터 / 상태(tag) / 주문일시 / 담당자 이름 / 연락처 │
 │ ┌─ 라인 el-table ───────────────────────────────────────┐ │
 │ │ 라인 │ SKU │ 품목명 │ 주문수량 │ 검수확정수량           │ │
 │ └───────────────────────────────────────────────────────┘ │
@@ -71,12 +71,14 @@
 | 센터 | `center_no` + `center_name` | 예: `CTR01 (서울센터)` |
 | 상태 | `status_code` / `status_name` | `el-tag` (§5) |
 | 주문일시 | `ordered_at` | 로컬 포맷 (YYYY-MM-DD HH:mm) |
+| 담당자 이름 | `partner_contact_name` | 텍스트 (NULL이면 `-`), 연락처와 인접 |
+| 담당자 연락처 | `partner_contact_tel` | 텍스트 (NULL이면 `-`) |
 
 ### 3.2 다이얼로그 — `InboundDetail` (`components/InboundDetail.js` 예정)
 
 | 영역 | 구성 |
 |------|------|
-| 헤더 | `order_no`, `center_no`/`center_name`, `status_code`/`status_name`(tag), `ordered_at` |
+| 헤더 | `order_no`, `center_no`/`center_name`, `status_code`/`status_name`(tag), `ordered_at`, `partner_contact_name`, `partner_contact_tel` |
 | 라인 테이블 | `line_no`, `sku_no`, `item_name`, `order_qty`, `inspected_qty` |
 | 액션 | 현재 `status_code`에서 허용된 전이 버튼만 노출 |
 | 닫기 | `el-dialog` `@close` → 목록 유지 |

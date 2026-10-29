@@ -1,5 +1,7 @@
 package com.execnt.wms.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,6 +19,7 @@ import com.execnt.wms.mapper.OutboundOrderMapper;
 public class OutboundOrderService {
 
     private static final String ORDER_KIND = "OUTBOUND";
+    private static final String INITIAL_STATUS = "00";
 
     private final OutboundOrderMapper outboundOrderMapper;
     private final StatusTransitionService statusTransitionService;
@@ -47,6 +50,97 @@ public class OutboundOrderService {
         Map<String, Object> detail = new LinkedHashMap<>(header);
         detail.put("lines", lines);
         return detail;
+    }
+
+    @Transactional
+    public Map<String, Object> createOrder(Map<String, Object> body) {
+        String centerNo = asString(body.get("center_no"));
+        String createdBy = asString(body.get("created_by"));
+        if (!StringUtils.hasText(createdBy)) {
+            createdBy = "demo-user";
+        }
+        if (createdBy.length() > 50) {
+            throw new BadRequestException("created_by는 최대 50자입니다");
+        }
+        if (!StringUtils.hasText(centerNo)) {
+            throw new BadRequestException("center_no는 필수입니다");
+        }
+
+        String partnerName = blankToNull(asString(body.get("partner_contact_name")));
+        String partnerTel = blankToNull(asString(body.get("partner_contact_tel")));
+        if (partnerName != null && partnerName.length() > 100) {
+            throw new BadRequestException("partner_contact_name은 최대 100자입니다");
+        }
+        if (partnerTel != null && partnerTel.length() > 20) {
+            throw new BadRequestException("partner_contact_tel은 최대 20자입니다");
+        }
+
+        Object linesObj = body.get("lines");
+        if (!(linesObj instanceof List<?> rawLines) || rawLines.isEmpty()) {
+            throw new BadRequestException("lines는 1건 이상 필요합니다");
+        }
+
+        Map<String, Object> centerParams = new HashMap<>();
+        centerParams.put("center_no", centerNo);
+        Long centerInfoId = outboundOrderMapper.selectActiveCenterIdByNo(centerParams);
+        if (centerInfoId == null) {
+            throw new BadRequestException("유효한 센터가 아닙니다: " + centerNo);
+        }
+
+        List<Map<String, Object>> normalizedLines = new ArrayList<>();
+        int lineNo = 1;
+        for (Object raw : rawLines) {
+            if (!(raw instanceof Map<?, ?> lineMap)) {
+                throw new BadRequestException("lines 항목 형식이 올바르지 않습니다");
+            }
+            String skuNo = asString(lineMap.get("sku_no"));
+            if (!StringUtils.hasText(skuNo)) {
+                throw new BadRequestException("sku_no는 필수입니다");
+            }
+            BigDecimal orderQty = toPositiveQty(lineMap.get("order_qty"), skuNo);
+
+            Map<String, Object> skuParams = new HashMap<>();
+            skuParams.put("sku_no", skuNo);
+            Long itemInfoId = outboundOrderMapper.selectActiveItemIdBySku(skuParams);
+            if (itemInfoId == null) {
+                throw new BadRequestException("유효한 SKU가 아닙니다: " + skuNo);
+            }
+
+            Map<String, Object> line = new HashMap<>();
+            line.put("line_no", lineNo++);
+            line.put("item_info_id", itemInfoId);
+            line.put("order_qty", orderQty);
+            line.put("created_by", createdBy);
+            line.put("updated_by", createdBy);
+            normalizedLines.add(line);
+        }
+
+        Integer maxSeq = outboundOrderMapper.selectMaxOrderSeqByCenter(centerParams);
+        int nextSeq = (maxSeq == null ? 0 : maxSeq) + 1;
+        String orderNo = String.format("OB-%s-%03d", centerNo, nextSeq);
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("order_no", orderNo);
+        header.put("center_info_id", centerInfoId);
+        header.put("status_code", INITIAL_STATUS);
+        header.put("created_by", createdBy);
+        header.put("updated_by", createdBy);
+        header.put("partner_contact_name", partnerName);
+        header.put("partner_contact_tel", partnerTel);
+
+        outboundOrderMapper.insertOutboundOrder(header);
+        Object generatedId = header.get("outbound_order_id");
+        if (generatedId == null) {
+            throw new BadRequestException("출고 주문 등록에 실패했습니다");
+        }
+        Long outboundOrderId = ((Number) generatedId).longValue();
+
+        for (Map<String, Object> line : normalizedLines) {
+            line.put("outbound_order_id", outboundOrderId);
+            outboundOrderMapper.insertOutboundOrderLine(line);
+        }
+
+        return getOrderDetail(orderNo);
     }
 
     @Transactional
@@ -100,5 +194,29 @@ public class OutboundOrderService {
 
     private String asString(Object value) {
         return value == null ? null : String.valueOf(value);
+    }
+
+    private String blankToNull(String value) {
+        return StringUtils.hasText(value) ? value.trim() : null;
+    }
+
+    private BigDecimal toPositiveQty(Object raw, String skuNo) {
+        if (raw == null) {
+            throw new BadRequestException("order_qty는 필수입니다: " + skuNo);
+        }
+        BigDecimal qty;
+        try {
+            if (raw instanceof Number number) {
+                qty = new BigDecimal(number.toString());
+            } else {
+                qty = new BigDecimal(String.valueOf(raw).trim());
+            }
+        } catch (NumberFormatException ex) {
+            throw new BadRequestException("order_qty 형식이 올바르지 않습니다: " + skuNo);
+        }
+        if (qty.compareTo(BigDecimal.ZERO) <= 0 || qty.stripTrailingZeros().scale() > 0) {
+            throw new BadRequestException("order_qty는 1 이상의 정수여야 합니다: " + skuNo);
+        }
+        return qty;
     }
 }

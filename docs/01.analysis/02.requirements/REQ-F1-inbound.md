@@ -52,7 +52,7 @@
 |------|-------------|-----------|
 | 센터 | `center_info` | center_no(UX), center_name, is_active |
 | 품목 | `item_info` | sku_no(UX), item_name, is_active |
-| 입고 주문 | `inbound_order` | order_no(UX), center_info_id, status_code, ordered_at |
+| 입고 주문 | `inbound_order` | order_no(UX), center_info_id, status_code, ordered_at, partner_contact_tel, partner_contact_name |
 | 입고 라인 | `inbound_order_line` | inbound_order_id, line_no(UX with order), item_info_id, order_qty, inspected_qty |
 | 상태 이력 | `order_status_history` | order_kind, order_no, from/to_status_code, changed_by, change_reason, changed_at |
 | 전이 규칙 | `status_transition_rule` | order_kind=INBOUND, from/to, is_active |
@@ -87,7 +87,9 @@
       "center_name": "서울센터",
       "status_code": "00",
       "status_name": "주문생성",
-      "ordered_at": "2026-05-14T09:00:00+09:00"
+      "ordered_at": "2026-05-14T09:00:00+09:00",
+      "partner_contact_tel": "010-1234-5678",
+      "partner_contact_name": "홍길동"
     }
   ]
 }
@@ -118,6 +120,8 @@
     "status_code": "00",
     "status_name": "주문생성",
     "ordered_at": "2026-05-14T09:00:00+09:00",
+    "partner_contact_tel": "010-1234-5678",
+    "partner_contact_name": "홍길동",
     "lines": [
       {
         "line_no": 1,

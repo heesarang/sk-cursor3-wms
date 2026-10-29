@@ -8,12 +8,14 @@ const api = {
   inbound: {
     list: (params) => axios.get(`${API_BASE}/api/inbound/orders`, { params }),
     detail: (orderNo) => axios.get(`${API_BASE}/api/inbound/orders/${encodeURIComponent(orderNo)}`),
+    create: (body) => axios.post(`${API_BASE}/api/inbound/orders`, body),
     transition: (orderNo, body) =>
       axios.post(`${API_BASE}/api/inbound/orders/${encodeURIComponent(orderNo)}/transition`, body),
   },
   outbound: {
     list: (params) => axios.get(`${API_BASE}/api/outbound/orders`, { params }),
     detail: (orderNo) => axios.get(`${API_BASE}/api/outbound/orders/${encodeURIComponent(orderNo)}`),
+    create: (body) => axios.post(`${API_BASE}/api/outbound/orders`, body),
     transition: (orderNo, body) =>
       axios.post(`${API_BASE}/api/outbound/orders/${encodeURIComponent(orderNo)}/transition`, body),
   },
