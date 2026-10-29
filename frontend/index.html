@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WMS — 창고관리</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Element Plus CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-plus@2.8.8/dist/index.css" />
+  <style>
+    body { margin: 0; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; }
+    .el-table .el-table__row { cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- Vue 3 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.5.12/dist/vue.global.prod.js"></script>
+  <!-- Vue Router -->
+  <script src="https://cdn.jsdelivr.net/npm/vue-router@4.4.5/dist/vue-router.global.prod.js"></script>
+  <!-- Element Plus -->
+  <script src="https://cdn.jsdelivr.net/npm/element-plus@2.8.8/dist/index.full.min.js"></script>
+  <!-- Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js"></script>
+
+  <!-- App scripts (coding-standards §5.2 순서) -->
+  <script src="./js/common.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./components/StatusTag.js"></script>
+  <script src="./components/AppNav.js"></script>
+  <script src="./components/InboundDetail.js"></script>
+  <script src="./components/OutboundDetail.js"></script>
+  <script src="./views/InboundList.js"></script>
+  <script src="./views/OutboundList.js"></script>
+  <script src="./views/DashboardView.js"></script>
+  <script src="./router.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 |------|------|
 | 문서 ID | project-standards |
-| 버전 | 1.0 |
-| 기준 PRD | docs/01.analysis/01.rfp/wms_prd.md |
+| 버전 | 1.2 |
+| 기준 PRD | docs/01.analysis/01.rfp/wms_prd.md (F1~F4 only; F5~F7 제외) |
 | DB 스키마 | `wms` (테이블 접두어 없음, 표준: `.cursor/rules/06-database.mdc`) |
 
 ---
@@ -132,14 +132,14 @@ DB 컬럼명은 `status_code`, API 쿼리·응답 필드도 `status_code` (2자�
 
 ---
 
-## 6. 마스터·식별자
+## 6. 마스터·식별자 (REQ §5.시드와 정합)
 
 | 구분 | 코드 예시 | 설명 |
 |------|-----------|------|
 | 센터 | `CTR01`, `CTR02` | `center_info` |
 | 상품 | `SKU-AAA`, `SKU-BBB`, `SKU-CCC` | `item_info` |
-| 입고 주문번호 | `IB-20260514-0001` 등 | `inbound_order.order_no` |
-| 출고 주문번호 | `OB-20260514-0001` 등 | `outbound_order.order_no` |
+| 입고 주문번호 | `IB-CTR01-001`, `IB-CTR01-020`, `IB-INVALID-TRANS`(90) | `inbound_order.order_no` |
+| 출고 주문번호 | `OB-CTR01-001`, `OB-DONE`(90) | `outbound_order.order_no` |
 
 ---
 
@@ -160,3 +160,36 @@ DB 컬럼명은 `status_code`, API 쿼리·응답 필드도 `status_code` (2자�
 | Base package | `com.execnt.wms` |
 | Spring Boot | 3.x, Java 21 |
 | MyBatis | XML only (`backend/src/main/resources/mapper/`) |
+
+---
+
+## 9. API 경로 요약 (F1~F4)
+
+정본은 각 REQ §5. 대시보드 쿼리의 `order_type`과 DB/규칙 API의 `order_kind`는 동일 값(`INBOUND`/`OUTBOUND`).
+
+| 기능 | Method | Path |
+|------|--------|------|
+| F1 목록 | GET | `/api/inbound/orders` |
+| F1 상세 | GET | `/api/inbound/orders/{orderNo}` |
+| F1 전이 | POST | `/api/inbound/orders/{orderNo}/transition` |
+| F2 목록 | GET | `/api/outbound/orders` |
+| F2 상세 | GET | `/api/outbound/orders/{orderNo}` |
+| F2 전이 | POST | `/api/outbound/orders/{orderNo}/transition` |
+| F3 요약 | GET | `/api/dashboard/summary` |
+| F3 최근 이력 | GET | `/api/dashboard/history/recent` |
+| F3 주문 추적 | GET | `/api/dashboard/history/trace` |
+| F4 규칙 조회 | GET | `/api/status-transitions/rules` |
+
+인증/JWT 없음. CORS-only SecurityConfig (`backend-config.md`).
+
+---
+
+## 10. 서버 헬퍼
+
+| 스크립트 | 용도 |
+|----------|------|
+| `scripts/start-backend.sh` / `.ps1` | Gradle `bootRun` 기동 (포트 8080) |
+| `scripts/stop-backend.sh` / `.ps1` | 8080 리스너·래퍼 종료 |
+| Health | `GET http://localhost:8080/v3/api-docs` → 200 |
+
+작성·유지 책임: analyst가 PRD 분석 시 초안 생성, `TASK-BE-F4-common`에서 존재·동작을 확인하고 없으면 동일 스펙으로 작성한다. 이후 TEST-BE / TEST-INT가 재사용한다.

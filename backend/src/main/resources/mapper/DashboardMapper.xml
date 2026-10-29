@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.execnt.wms.mapper.DashboardMapper">
+
+    <select id="selectInboundSummary" parameterType="map" resultType="map">
+        SELECT cc.code_value AS status_code,
+               cc.code_name AS status_name,
+               COUNT(o.inbound_order_id) AS order_count
+          FROM wms.code_group cg
+          JOIN wms.common_code cc
+            ON cc.code_group_id = cg.code_group_id
+           AND cc.is_active = TRUE
+          LEFT JOIN wms.inbound_order o
+            ON o.status_code = cc.code_value
+          <if test="center_no != null and center_no != ''">
+           AND EXISTS (
+                SELECT 1
+                  FROM wms.center_info ci
+                 WHERE ci.center_info_id = o.center_info_id
+                   AND ci.center_no = #{center_no}
+               )
+          </if>
+         WHERE cg.group_code = 'INB_STATUS'
+           AND cg.is_active = TRUE
+         GROUP BY cc.code_value, cc.code_name, cc.sort_order
+         ORDER BY cc.sort_order, cc.code_value
+    </select>
+
+    <select id="selectOutboundSummary" parameterType="map" resultType="map">
+        SELECT cc.code_value AS status_code,
+               cc.code_name AS status_name,
+               COUNT(o.outbound_order_id) AS order_count
+          FROM wms.code_group cg
+          JOIN wms.common_code cc
+            ON cc.code_group_id = cg.code_group_id
+           AND cc.is_active = TRUE
+          LEFT JOIN wms.outbound_order o
+            ON o.status_code = cc.code_value
+          <if test="center_no != null and center_no != ''">
+           AND EXISTS (
+                SELECT 1
+                  FROM wms.center_info ci
+                 WHERE ci.center_info_id = o.center_info_id
+                   AND ci.center_no = #{center_no}
+               )
+          </if>
+         WHERE cg.group_code = 'OUT_STATUS'
+           AND cg.is_active = TRUE
+         GROUP BY cc.code_value, cc.code_name, cc.sort_order
+         ORDER BY cc.sort_order, cc.code_value
+    </select>
+
+    <select id="selectRecentHistory" parameterType="map" resultType="map">
+        SELECT h.order_kind AS order_type,
+               h.order_no,
+               h.from_status_code,
+               h.to_status_code,
+               h.changed_by,
+               h.change_reason,
+               h.changed_at
+          FROM wms.order_status_history h
+         ORDER BY h.changed_at DESC, h.order_status_history_id DESC
+         LIMIT #{limit}
+    </select>
+
+    <select id="countOrderExists" parameterType="map" resultType="int">
+        <choose>
+            <when test="order_type == 'INBOUND'">
+                SELECT COUNT(1)
+                  FROM wms.inbound_order
+                 WHERE order_no = #{order_no}
+            </when>
+            <when test="order_type == 'OUTBOUND'">
+                SELECT COUNT(1)
+                  FROM wms.outbound_order
+                 WHERE order_no = #{order_no}
+            </when>
+            <otherwise>
+                SELECT 0
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectOrderHistoryTrace" parameterType="map" resultType="map">
+        SELECT h.from_status_code,
+               h.to_status_code,
+               h.changed_by,
+               h.change_reason,
+               h.changed_at
+          FROM wms.order_status_history h
+         WHERE h.order_kind = #{order_type}
+           AND h.order_no = #{order_no}
+         ORDER BY h.changed_at ASC, h.order_status_history_id ASC
+    </select>
+
+</mapper>

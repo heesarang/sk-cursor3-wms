@@ -18,6 +18,8 @@ configurations {
 }
 
 repositories {
+    // Maven Central이 차단된 환경 대비 미러 (중앙 저장소와 동일 좌표)
+    maven { url 'https://maven.aliyun.com/repository/central' }
     mavenCentral()
 }
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.execnt.wms.mapper.StatusTransitionMapper">
+
+    <select id="countActiveRule" parameterType="map" resultType="int">
+        SELECT COUNT(1)
+          FROM wms.status_transition_rule
+         WHERE order_kind = #{order_kind}
+           AND from_status_code = #{from_status_code}
+           AND to_status_code = #{to_status_code}
+           AND is_active = TRUE
+    </select>
+
+    <select id="selectStatusTransitionRuleList" parameterType="map" resultType="map">
+        SELECT order_kind,
+               from_status_code,
+               to_status_code,
+               is_active
+          FROM wms.status_transition_rule
+         WHERE is_active = TRUE
+           AND order_kind = #{order_kind}
+         ORDER BY from_status_code, to_status_code
+    </select>
+
+    <insert id="insertOrderStatusHistory" parameterType="map">
+        INSERT INTO wms.order_status_history (
+            order_kind,
+            order_no,
+            from_status_code,
+            to_status_code,
+            changed_by,
+            change_reason,
+            changed_at,
+            created_by,
+            updated_by
+        ) VALUES (
+            #{order_kind},
+            #{order_no},
+            #{from_status_code},
+            #{to_status_code},
+            #{changed_by},
+            #{change_reason},
+            now(),
+            #{changed_by},
+            #{changed_by}
+        )
+    </insert>
+
+</mapper>
